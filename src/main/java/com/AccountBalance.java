@@ -3,46 +3,27 @@ package main.java.com;
 import java.io.BufferedReader;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.Optional;
+import java.math.BigDecimal;
+
 
 public class AccountBalance {
+    private BigDecimal balance = BigDecimal.ZERO;
 
-    public double calculateAccountBalance(double enteredAmount, Optional<String> pathToFile, Optional<String> separator) {
+    public AccountBalance(BigDecimal enteredBalance) {
+        balance = enteredBalance;
+    }
 
-        String csvFilePath  = pathToFile.isPresent() ? pathToFile.get() : "../../../percentageDetails.csv";
-        String line = "";
-        String csvSplitBy = separator.isPresent() ? separator.get() : ",";
-        double requiredPercentage = 0;
+    public void calculateAccountBalanceAfterOneYear(BigDecimal percentage) {
+        BigDecimal oneHundred = new BigDecimal(100);
+        System.out.println("Balance: " + balance);
+        BigDecimal x = percentage.add(oneHundred);
+        BigDecimal y = x.divide(oneHundred);
 
+        balance = balance.multiply(y);
+        System.out.println("Calculated balance after a year: " + balance);
+    }
 
-        try (BufferedReader br = new BufferedReader(new FileReader(csvFilePath))) {
-            while ((line = br.readLine()) != null) {
-                String[] fileData = line.split(csvSplitBy);
-                int lineMinimum = Integer.parseInt(fileData[0]);
-                int lineMaximum = Integer.parseInt(fileData[1]);
-                double linePercentage = Double.parseDouble(fileData[2]);
-
-                if (enteredAmount > lineMinimum && enteredAmount <= lineMaximum) {
-                    requiredPercentage = linePercentage;
-                }
-
-                System.out.println("Percentage used for calculation: " + requiredPercentage);
-
-            }
-
-        } catch (IOException e) {
-            System.out.println("Sciezka do pliku: " + csvFilePath + " nie zostala znaleziona");
-            e.printStackTrace();
-        }
-
-
-        double percentage = (100 + requiredPercentage) / 100;
-
-        double finalBalance = enteredAmount * percentage;
-        System.out.println("Calculated final balance: " + finalBalance);
-
-        return finalBalance;
-
-
+    public BigDecimal getBalance() {
+        return balance;
     }
 }

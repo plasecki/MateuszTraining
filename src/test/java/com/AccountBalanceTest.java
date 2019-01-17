@@ -1,15 +1,17 @@
 package test.java.com;
 
 import main.java.com.AccountBalance;
+import main.java.com.InterestFileReader;
 import org.testng.Assert;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.math.BigDecimal;
 import java.util.Optional;
 
 public class AccountBalanceTest {
-    AccountBalance accountBalance = new AccountBalance();
+    String csvFilePath = "../../../percentageDetails.csv";
 
     @BeforeMethod
     public void setUp() {
@@ -20,20 +22,35 @@ public class AccountBalanceTest {
     }
 
     @Test
-    public void testCalculateRangeOne() {
-        double balance = accountBalance.calculateAccountBalance(10000, Optional.empty(), Optional.empty());
-        Assert.assertEquals(balance, 10100.0 , "Incorrect calculation for range below 10k");
+    public void testCalculateRangeBelow10k() {
+        BigDecimal balance = new BigDecimal(10000);
+        AccountBalance accountBalance = new AccountBalance(balance);
+        InterestFileReader fileReader = new InterestFileReader(csvFilePath, ",");
+        accountBalance.calculateAccountBalanceAfterOneYear(fileReader.getRequiredPercentage(balance));
+        Assert.assertTrue((accountBalance.getBalance().compareTo(new BigDecimal(10100)) == 0) ,
+                "Incorrect calculation for range below 10k");
+
     }
 
     @Test
-    public void testCalculateRangeTwo() {
-        double balance = accountBalance.calculateAccountBalance(100000, Optional.empty(), Optional.empty());
-        Assert.assertEquals(balance, 102000.0 , "Incorrect calculation for range from 10k to 100k");
+    public void testCalculateRangeBelow100k() {
+        BigDecimal balance = new BigDecimal(100000);
+        AccountBalance accountBalance = new AccountBalance(balance);
+        InterestFileReader fileReader = new InterestFileReader(csvFilePath, ",");
+        accountBalance.calculateAccountBalanceAfterOneYear(fileReader.getRequiredPercentage(balance));
+        Assert.assertTrue((accountBalance.getBalance().compareTo(new BigDecimal(102000)) == 0) ,
+                "Incorrect calculation for range below 100k");
+
     }
 
     @Test
-    public void testCalculateRangeThree() {
-        double balance = accountBalance.calculateAccountBalance(1000000, Optional.empty(), Optional.empty());
-        Assert.assertEquals(balance, 1030000.0 , "Incorrect calculation for range from 100k to 1 milion");
+    public void testCalculateRangeBelow1M() {
+        BigDecimal balance = new BigDecimal(1000000);
+        AccountBalance accountBalance = new AccountBalance(balance);
+        InterestFileReader fileReader = new InterestFileReader(csvFilePath, ",");
+        accountBalance.calculateAccountBalanceAfterOneYear(fileReader.getRequiredPercentage(balance));
+         Assert.assertTrue((accountBalance.getBalance().compareTo(new BigDecimal(1030000)) == 0) ,
+                 "Incorrect calculation for range below 1M");
+
     }
 }
