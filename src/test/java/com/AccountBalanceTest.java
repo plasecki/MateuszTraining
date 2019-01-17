@@ -2,6 +2,8 @@ package test.java.com;
 
 import main.java.com.AccountBalance;
 import org.testng.Assert;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
 import java.util.Optional;
@@ -9,11 +11,11 @@ import java.util.Optional;
 public class AccountBalanceTest {
     AccountBalance accountBalance = new AccountBalance();
 
-    @org.testng.annotations.BeforeMethod
+    @BeforeMethod
     public void setUp() {
     }
 
-    @org.testng.annotations.AfterMethod
+    @AfterMethod
     public void tearDown() {
     }
 
